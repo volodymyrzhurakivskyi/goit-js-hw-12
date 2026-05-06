@@ -51,9 +51,18 @@ form.addEventListener('submit', async (event) => {
 
     createGallery(data.hits);
     
-    // Перевіряємо, чи є ще картинки для завантаження
+    // ПЕРЕВІРКА КІЛЬКОСТІ РЕЗУЛЬТАТІВ
     if (data.totalHits > 15) {
       showLoadMoreButton();
+    } else {
+      // Якщо результатів 15 або менше — кнопки не буде,
+      // але ми показуємо сповіщення про кінець (вимога ментора)
+      hideLoadMoreButton();
+      iziToast.info({ 
+        message: "We're sorry, but you've reached the end of search results.",
+        position: 'topRight',
+        transitionIn: 'fadeInUp'
+      });
     }
   } catch (error) {
     iziToast.error({ message: 'Помилка сервера!' });
@@ -86,7 +95,14 @@ loadMoreBtn.addEventListener('click', async () => {
     const totalPages = Math.ceil(data.totalHits / 15);
     if (currentPage >= totalPages) {
       hideLoadMoreButton();
-      iziToast.info({ message: "We're sorry, but you've reached the end of search results." });
+setTimeout(() => {
+  iziToast.info({
+    message: "We're sorry, but you've reached the end of search results.",
+    position: 'topRight',
+    transitionIn: 'fadeInUp',
+    setTimeout: 5000
+  });
+}, 500);
     } else {
       showLoadMoreButton();
     }
